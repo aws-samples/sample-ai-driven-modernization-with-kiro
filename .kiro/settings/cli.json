@@ -1,0 +1,9 @@
+{
+  "chat.enableCheckpoint": false,
+  "chat.enableContextUsageIndicator": true,
+  "chat.enableDelegate": true,
+  "chat.enableKnowledge": true,
+  "chat.enableThinking": true,
+  "chat.enableTodoList": true,
+  "mcp.noInteractiveTimeout": 30000
+}

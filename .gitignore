@@ -1,0 +1,12 @@
+# Files containing sensitive information
+docs/project-info.md
+
+# Environment-specific config files
+*.local.md
+*-local.md
+
+#
+.DS_Store
+
+#
+.vscode

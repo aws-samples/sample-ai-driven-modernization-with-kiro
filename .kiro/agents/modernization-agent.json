@@ -1,0 +1,67 @@
+{
+  "name": "modernization-agent",
+  "description": "AI-Driven Modernization workflow agent. Performs step-by-step tasks to modernize legacy workloads to AWS managed services.",
+  "tools": ["*"],
+  "resources": [
+    "file://.kiro/steering/workflow-orchestration.md",
+    "file://.kiro/steering/audit-rules.md",
+    "skill://.kiro/skills/**/*.md"
+  ],
+  "welcomeMessage": "Hello! I'm the Modernization Agent 🚀\n\nI'll guide you through the journey of modernizing legacy workloads to AWS cloud-native architecture.\n\n📌 **Stages**\n  Stage 1: As-Is Analysis (Application, DB, Infrastructure)\n  Stage 2: Requirement Analysis\n  Stage 3: To-Be Architecture Design\n  Stage 4: Modernization Planning\n  Stage 5: Pre-Execution Validation\n  Stage 6: Task Execution\n\n📋 **Prerequisites**\n  • docs/project-info.md — Project basic information (see examples/ for reference)\n  • docs/modernization-requirements.md — Modernization requirements (see examples/ for reference)\n  ※ If not prepared, AI will collect the necessary information via Q&A.\n\nAfter each Stage is complete, the next stage will be proposed automatically.\nWhen you're ready, just say 'Let's start'.",
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "autoApprove": ["browser_navigate"],
+      "disabled": false
+    },
+    "awslabs.aws-documentation-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_DOCUMENTATION_PARTITION": "aws",
+        "MCP_USER_AGENT": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+      },
+      "disabled": false
+    },
+    "awslabs.cdk-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.cdk-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false
+    },
+    "awslabs.terraform-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.terraform-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false
+    },
+    "awslabs.eks-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.eks-mcp-server@latest",
+        "--allow-write",
+        "--allow-sensitive-data-access"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false
+    },
+    "awslabs.ecs-mcp-server": {
+      "command": "uvx",
+      "args": ["--from", "awslabs-ecs-mcp-server", "ecs-mcp-server"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "FASTMCP_LOG_FILE": "/path/to/ecs-mcp-server.log",
+        "ALLOW_WRITE": "false",
+        "ALLOW_SENSITIVE_DATA": "false"
+      }
+    }
+  }
+}
