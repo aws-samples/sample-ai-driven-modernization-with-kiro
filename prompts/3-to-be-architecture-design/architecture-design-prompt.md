@@ -26,7 +26,7 @@ Load these files before starting:
 
 Generate:
 - `outputs/architecture/to-be-architecture.md` — Architecture document with Mermaid diagram (AI working document)
-- `outputs/architecture/to-be-architecture.html` — Visual architecture diagram (customer review)
+- `outputs/architecture/to-be-architecture.html` — AWS-branded visual architecture diagram for customer review, generated with the `aws-diagram-design` skill (official AWS icons, Amazon Ember typography); falls back to styled Mermaid rendering if the skill is not installed
 
 ## Key Rules
 

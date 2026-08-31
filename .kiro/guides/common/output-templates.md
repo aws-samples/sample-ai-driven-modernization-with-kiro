@@ -237,7 +237,17 @@ source-code/[repo-name]/
 ### To-Be Architecture HTML (Customer Review)
 **File**: `outputs/architecture/to-be-architecture.html`
 
-Generate an HTML file that renders the same Mermaid diagram with custom theme:
+**Preferred: generate with the `aws-diagram-design` skill** (`~/.kiro/skills/aws-diagram-design/`):
+- Redraw the Mermaid source from the .md file via the skill's Mermaid import flow (`scripts/mermaid_extract.py` → structural digest → editorial redraw)
+- Visual type: **Architecture** for the To-Be diagram, **Flowchart/Process** for the Phase Workflow Overview
+- AWS brand skin: white paper, squid-ink text, smile-orange accent, Amazon Ember typography
+- Official AWS Architecture Icons for all named services; VPC/subnet zone conventions
+- Output dials: format `html`, size `doc-wide`, detail `balanced`, audience `mixed`
+- Single self-contained HTML file (inline SVG + CSS, no external dependencies)
+- Page layout: title, diagram(s), legend strip, notes section
+- Validate with the skill's `scripts/self_check.py` before delivery
+
+**Fallback (skill not installed)**: render the same Mermaid source via Mermaid CDN:
 - Mermaid CDN (`https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js`)
 - Custom theme: component-type colors (Compute=orange, Database=blue, Network=green, Security=red)
 - Page layout: title, diagram, legend, notes section

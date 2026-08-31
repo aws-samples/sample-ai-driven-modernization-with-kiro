@@ -23,7 +23,7 @@ Guide AI through designing the To-Be architecture based on As-Is analysis and re
 
 ## Outputs
 - `outputs/architecture/to-be-architecture.md` — AI working document (Mermaid, source of truth)
-- `outputs/architecture/to-be-architecture.html` — Customer review (Mermaid with custom theme)
+- `outputs/architecture/to-be-architecture.html` — Customer review (AWS-branded diagram generated via `aws-diagram-design` skill; falls back to styled Mermaid if the skill is unavailable)
 
 ---
 
@@ -139,10 +139,32 @@ Containers are placed in Private Subnets with traffic routed through ALB.
 - **Service-specific**: Container BP, Database migration BP, Networking BP
 
 **Architecture diagram**:
-- Generate Mermaid diagram in the .md file
+- Generate Mermaid diagram in the .md file (source of truth — renders in Git and is cheap to iterate)
 - Show all components (VPC, subnets, ECS/EKS, ALB, RDS, etc.)
 - Show data flow and integration points
-- Generate .html file with same Mermaid source + custom theme for customer review
+- Generate .html file for customer review using the **`aws-diagram-design` skill** (see below)
+
+**Customer-review HTML generation (aws-diagram-design skill)**:
+
+Check skill availability first: the skill lives at `~/.kiro/skills/aws-diagram-design/` (or is listed in the loaded skills index).
+
+**If the skill is available (preferred)**:
+1. Load the skill's `SKILL.md` and follow its Mermaid import flow (`references/import-mermaid.md`):
+   - Run `python3 <skill-dir>/scripts/mermaid_extract.py` on the Mermaid source from the .md file to get the structural digest (nodes, edges, containers)
+   - **Redraw, never convert** — keep the content (components, relationships, grouping, direction), discard Mermaid's automatic layout
+2. Choose the **Architecture** visual type (`references/type-architecture.md`) for the overall To-Be diagram; use **Flowchart** or **Process** type for the Phase Workflow Overview
+3. Set output dials: format `html`, size `doc-wide` (or `slide-16x9` if the customer will present it), detail `balanced`, audience `mixed`
+4. Use **official AWS Architecture Icons** for all named AWS services (ECS, EKS, ALB, RDS, S3, etc.) and VPC/subnet zone conventions per `references/primitive-aws-icons.md`
+5. Respect the skill's complexity budget (max 9 nodes / 12 arrows per diagram) — if the architecture exceeds it, split into overview + per-domain detail diagrams within the same HTML file
+6. Run the skill's self-check before finalizing: `python3 <skill-dir>/scripts/self_check.py outputs/architecture/to-be-architecture.html` and `verify-geometry.py`
+7. Save the result as `outputs/architecture/to-be-architecture.html` (single self-contained file)
+8. Report the fidelity ledger to the user: what was merged, collapsed, or split relative to the Mermaid source
+
+**If the skill is NOT available (fallback)**:
+- Generate the .html with the same Mermaid source rendered via Mermaid CDN (`https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js`) + custom theme (Compute=orange, Database=blue, Network=green, Security=red)
+- Note in the audit log that the fallback was used and recommend installing the skill: `https://github.com/masangbeom/aws-diagram-design`
+
+**Consistency rule**: The .md Mermaid diagram remains the source of truth. If the architecture changes after customer feedback, update the Mermaid source first, then regenerate the HTML from it.
 
 **Phase-level workflow diagrams (MANDATORY)**:
 

@@ -93,7 +93,7 @@ User provides:
 
 ### Expected Output
 - `outputs/architecture/to-be-architecture.md` (AI working document, Mermaid)
-- `outputs/architecture/to-be-architecture.html` (Customer review, styled Mermaid)
+- `outputs/architecture/to-be-architecture.html` (Customer review, AWS-branded diagram via `aws-diagram-design` skill; styled Mermaid fallback)
 
 ### Quality Check
 - Architecture diagram complete (all components, data flow, integration points)
