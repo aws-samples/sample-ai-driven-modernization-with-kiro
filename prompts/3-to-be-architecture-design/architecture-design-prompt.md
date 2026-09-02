@@ -25,7 +25,7 @@ Load these files before starting:
 ## Output Documents
 
 Generate:
-- `outputs/architecture/to-be-architecture.md` — Single architecture document: Mermaid diagrams during design iterations, AWS-branded SVG diagrams (generated once at approval time with the `aws-diagram-design` skill — official AWS icons, Amazon Ember typography) embedded at the top of the diagram sections. Falls back to Mermaid-only if the skill is not installed
+- `outputs/architecture/to-be-architecture.md` — Single architecture document: Mermaid diagrams during design iterations and at the approval gate; after approval, the main AWS-branded SVG diagram (generated once with the `aws-diagram-design` skill — official AWS icons, Amazon Ember typography) is embedded at the top of the diagram section. Falls back to Mermaid-only if the skill is not installed
 
 ## Key Rules
 

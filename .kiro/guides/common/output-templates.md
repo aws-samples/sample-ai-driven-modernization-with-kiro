@@ -234,17 +234,16 @@ source-code/[repo-name]/
 - **Notes**: [customer feedback]
 ```
 
-### To-Be Architecture Diagrams (SVG, embedded in the .md)
-**Files**: `outputs/architecture/to-be-architecture.svg`, `to-be-architecture-phases.svg`
+### To-Be Architecture Diagram (SVG, embedded in the .md)
+**File**: `outputs/architecture/to-be-architecture.svg` (main diagram; Phase-workflow SVG only on user request)
 
-The .md is the single architecture document. Diagrams are Mermaid during design iterations; once the design is stable (approval presentation), generate final SVGs **once** with the `aws-diagram-design` skill (`~/.kiro/skills/aws-diagram-design/`):
+The .md is the single architecture document. Diagrams are Mermaid during design iterations and at the approval gate; **after approval**, generate the final SVG **once** on the frozen design with the `aws-diagram-design` skill (`~/.kiro/skills/aws-diagram-design/`):
 - Redraw the Mermaid source via the skill's Mermaid import flow (`scripts/mermaid_extract.py` → structural digest → editorial redraw)
-- Visual type: **Architecture** for the To-Be diagram, **Flowchart/Process** for the Phase Workflow Overview
-- AWS brand skin: white paper, squid-ink text, smile-orange accent, Amazon Ember typography
+- Visual type: **Architecture**; AWS brand skin (white paper, squid-ink text, smile-orange accent, Amazon Ember typography)
 - Official AWS Architecture Icons for all named services; VPC/subnet zone conventions
-- Standalone .svg files (XML declaration, `xmlns`, `viewBox`, `<title>`/`<desc>`, `local()`-only `@font-face`), saved next to the .md
-- Embed with `![...](./to-be-architecture.svg)` at the top of the diagram sections; keep Mermaid below as the text-diffable working copy
-- Validate with the skill's `scripts/self_check.py` / `verify-geometry.py` + a headless-browser render check before delivery
+- Standalone .svg file (XML declaration, `xmlns`, `viewBox`, `<title>`/`<desc>`, `local()`-only `@font-face`), saved next to the .md
+- Embed with `![...](./to-be-architecture.svg)` at the top of the diagram section; keep Mermaid below as the text-diffable working copy
+- Validate in a single pass: `verify-geometry.py` + XML parse + **zone-label clearance** (header text ≥16px above the first enclosed node); browser render check only on findings
 
 **Fallback (skill not installed)**: keep Mermaid-only diagrams (they follow the renderer-safety rules in the architecture design guide, so they render cleanly in Git/IDE previews)
 

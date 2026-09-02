@@ -23,7 +23,7 @@ Guide AI through designing the To-Be architecture based on As-Is analysis and re
 
 ## Outputs
 - `outputs/architecture/to-be-architecture.md` — AI working document (Mermaid, source of truth)
-- `outputs/architecture/to-be-architecture.svg`, `to-be-architecture-phases.svg` — AWS-branded diagrams embedded in the .md, generated once at approval time via the `aws-diagram-design` skill (Mermaid-only if the skill is unavailable)
+- `outputs/architecture/to-be-architecture.svg` — AWS-branded main diagram embedded in the .md, generated once **post-approval** via the `aws-diagram-design` skill (Mermaid-only if the skill is unavailable; Phase-workflow SVG only on user request)
 
 ---
 
@@ -140,9 +140,10 @@ Containers are placed in Private Subnets with traffic routed through ALB.
 
 **Architecture diagram**:
 - The .md is the **single architecture document** — no separate HTML deliverable
-- During design iterations (Step 2–4, feedback loops): use **Mermaid only** in the .md — it is cheap to regenerate on every revision
+- During design iterations AND the approval presentation (Step 2–5): use **Mermaid only** in the .md — cheap to regenerate, and the approval gate is presented without waiting for diagram rendering
 - Show all components (VPC, subnets, ECS/EKS, ALB, RDS, etc.), data flow, and integration points
-- **Once the design is stable** (right before the Step 5 approval presentation): generate AWS-branded SVG diagrams with the **`aws-diagram-design` skill** and embed them in the .md (see below). Generate SVGs exactly once per approval cycle — if approval feedback changes the architecture, update the Mermaid first, and regenerate only the affected SVG when re-presenting
+- **After the customer approves** (Step 5 APPROVED): generate the AWS-branded SVG **once on the frozen design** with the **`aws-diagram-design` skill** and embed it in the .md (see below). Post-approval generation eliminates rework from approval feedback and does not block the customer's review
+- **Default scope: the main To-Be architecture diagram only.** The Phase Workflow is a simple flowchart that Mermaid renders well — generate a branded SVG for it only if the user asks
 
 **Mermaid renderer-safety rules (MANDATORY — prevents broken/overlapping boxes in IDE and Git previews)**:
 - **Max 2 levels of subgraph nesting** (e.g., VPC → subnet). A third level (e.g., subnet → ECS cluster) frequently causes child nodes to overflow their parent box — represent the cluster as a label on the subnet subgraph or on the node itself instead
@@ -152,9 +153,9 @@ Containers are placed in Private Subnets with traffic routed through ALB.
 - Keep node labels ≤3 lines; move detail to the document body
 - Detail lives in §4 — the Mermaid diagram is a structural overview, not a spec sheet
 
-**Final SVG diagram generation (aws-diagram-design skill — once, at approval time)**:
+**Final SVG diagram generation (aws-diagram-design skill — once, after approval)**:
 
-> Token-cost note: skill-quality SVG output is ~50x the cost of Mermaid (tens of KB of hand-placed markup + icon inlining + verification cycles). That is why SVGs are generated once on the stable design, never per iteration.
+> Token/time note: skill-quality SVG costs ~50x Mermaid in tokens and ~10 minutes of wall-clock per diagram (coordinate design + large markup emission + verification). That is why it runs once, post-approval, on the frozen design, and only for the main architecture diagram by default.
 
 Check skill availability first: the skill lives at `~/.kiro/skills/aws-diagram-design/` (or is listed in the loaded skills index).
 
@@ -162,14 +163,14 @@ Check skill availability first: the skill lives at `~/.kiro/skills/aws-diagram-d
 1. Load the skill's `SKILL.md` and follow its Mermaid import flow (`references/import-mermaid.md`):
    - Run `python3 <skill-dir>/scripts/mermaid_extract.py` on the Mermaid source from the .md file to get the structural digest (nodes, edges, containers)
    - **Redraw, never convert** — keep the content (components, relationships, grouping, direction), discard Mermaid's automatic layout
-2. Choose the **Architecture** visual type (`references/type-architecture.md`) for the overall To-Be diagram; use **Flowchart** or **Process** type for the Phase Workflow Overview
-3. Set output dials: size `doc-wide`, detail `balanced`, audience `mixed`
-4. Use **official AWS Architecture Icons** for all named AWS services (ECS, EKS, ALB, RDS, S3, etc.) and VPC/subnet zone conventions per `references/primitive-aws-icons.md`
-5. Respect the skill's complexity budget (max 9 nodes / 12 arrows per diagram) — if the architecture exceeds it, split into overview + per-domain detail diagrams
-6. Produce each diagram as a **standalone .svg file** directly (per the skill's `references/export.md` output contract): XML declaration, `xmlns`, `viewBox`, `<title>`/`<desc>` accessibility pair, `local()`-only Amazon Ember `@font-face`. Save next to the .md: `to-be-architecture.svg`, `to-be-architecture-phases.svg`
-7. Validate: `python3 <skill-dir>/scripts/self_check.py` and `verify-geometry.py` on each SVG (wrap in minimal HTML if the checker requires it), plus a headless-browser render check
-8. Embed at the top of the .md diagram sections with `![...](./to-be-architecture.svg)`, keeping the Mermaid source below the image as the text-diffable working copy
-9. Report the fidelity ledger to the user: what was merged, collapsed, or split relative to the Mermaid source
+2. Choose the **Architecture** visual type (`references/type-architecture.md`); set dials size `doc-wide`, detail `balanced`, audience `mixed`
+3. Use **official AWS Architecture Icons** for all named AWS services (ECS, EKS, ALB, RDS, S3, etc.) and VPC/subnet zone conventions per `references/primitive-aws-icons.md`
+4. Respect the skill's complexity budget (max 9 nodes / 12 arrows) — if the architecture exceeds it, split into overview + per-domain detail diagrams
+5. Produce the diagram as a **standalone .svg file** directly (per the skill's `references/export.md` output contract): XML declaration, `xmlns`, `viewBox`, `<title>`/`<desc>` accessibility pair, `local()`-only Amazon Ember `@font-face`. Save next to the .md: `to-be-architecture.svg`
+6. **Validate in a single pass**: `verify-geometry.py` + XML parse check, **plus a zone-label clearance check** — for every zone, the header text baseline must sit ≥16px above the top edge of the first enclosed node (the skill's zone-label margin rule; `verify-geometry.py` does NOT catch this because zone labels have no mask rect). Run a headless-browser render check only if the checks report findings or the user reports a visual defect — do not loop screenshot-fix cycles by default
+7. Embed at the top of the .md diagram section with `![...](./to-be-architecture.svg)`, keeping the Mermaid source below the image as the text-diffable working copy
+8. Report the fidelity ledger to the user: what was merged, collapsed, or split relative to the Mermaid source
+9. If post-approval changes occur later (e.g., Stage 5 findings), update the Mermaid first and regenerate the SVG only when re-presenting for re-approval
 
 **If the skill is NOT available (fallback)**:
 - Keep Mermaid-only diagrams in the .md (they follow the renderer-safety rules above, so they render cleanly)
@@ -270,7 +271,7 @@ After user selection, include in the architecture:
 
 Present the complete architecture document for review:
 1. Architecture overview with rationale for each decision
-2. Architecture diagrams (skill-generated SVG embedded in the .md, Mermaid working copy below)
+2. Architecture diagrams (Mermaid at approval time; AWS-branded SVG generated and embedded post-approval)
 3. Compliance Matrix (exceptions with justifications)
 4. Cutover strategy (if production)
 5. Provisioning method and conventions

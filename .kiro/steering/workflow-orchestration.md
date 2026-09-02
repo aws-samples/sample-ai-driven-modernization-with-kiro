@@ -92,8 +92,8 @@ User provides:
 5. **MANDATORY**: Log completion and output files in `outputs/audit.md`
 
 ### Expected Output
-- `outputs/architecture/to-be-architecture.md` (single architecture document: Mermaid working diagrams + skill-generated SVG embedded at approval time)
-- `outputs/architecture/to-be-architecture*.svg` (AWS-branded diagrams via `aws-diagram-design` skill; Mermaid-only fallback)
+- `outputs/architecture/to-be-architecture.md` (single architecture document: Mermaid working diagrams + skill-generated SVG embedded post-approval)
+- `outputs/architecture/to-be-architecture.svg` (AWS-branded main diagram via `aws-diagram-design` skill, generated once after approval; Mermaid-only fallback)
 
 ### Quality Check
 - Architecture diagram complete (all components, data flow, integration points)
