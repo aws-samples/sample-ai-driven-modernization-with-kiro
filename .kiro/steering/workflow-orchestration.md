@@ -92,8 +92,8 @@ User provides:
 5. **MANDATORY**: Log completion and output files in `outputs/audit.md`
 
 ### Expected Output
-- `outputs/architecture/to-be-architecture.md` (AI working document, Mermaid)
-- `outputs/architecture/to-be-architecture.html` (Customer review, AWS-branded diagram via `aws-diagram-design` skill; styled Mermaid fallback)
+- `outputs/architecture/to-be-architecture.md` (single architecture document: Mermaid working diagrams + skill-generated SVG embedded at approval time)
+- `outputs/architecture/to-be-architecture*.svg` (AWS-branded diagrams via `aws-diagram-design` skill; Mermaid-only fallback)
 
 ### Quality Check
 - Architecture diagram complete (all components, data flow, integration points)
