@@ -142,6 +142,11 @@ Containers are placed in Private Subnets with traffic routed through ALB.
 - The .md is the **single architecture document** — no separate HTML deliverable
 - During design iterations AND the approval presentation (Step 2–5): use **Mermaid only** in the .md — cheap to regenerate, and the approval gate is presented without waiting for diagram rendering
 - Show all components (VPC, subnets, ECS/EKS, ALB, RDS, etc.), data flow, and integration points
+- **Required network detail** (both in the Mermaid overview where practical, and MANDATORY in the final SVG):
+  - Subnet names **with CIDR blocks and AZs** as zone sublabels (e.g., `퍼블릭 서브넷 · 10.100.1.0/24 (2a) · 10.100.2.0/24 (2b)`)
+  - **Internet Gateway and NAT Gateway** as explicit nodes on the traffic path
+  - **Security groups** as dashed boundaries (AWS convention: `#DD344C` dashed, text label only) around the resources they protect, labeled with the SG name and key allowed flows (e.g., `alb-sg: 80 from 0.0.0.0/0`)
+  - **NACL** as a zone sublabel on each subnet when non-default (e.g., `NACL: default (allow all)` may be a single footnote if all subnets use the default)
 - **After the customer approves** (Step 5 APPROVED): generate the AWS-branded SVG **once on the frozen design** with the **`aws-diagram-design` skill** and embed it in the .md (see below). Post-approval generation eliminates rework from approval feedback and does not block the customer's review
 - **Default scope: the main To-Be architecture diagram only.** The Phase Workflow is a simple flowchart that Mermaid renders well — generate a branded SVG for it only if the user asks
 
@@ -163,7 +168,7 @@ Check skill availability first: the skill lives at `~/.kiro/skills/aws-diagram-d
 1. Load the skill's `SKILL.md` and follow its Mermaid import flow (`references/import-mermaid.md`):
    - Run `python3 <skill-dir>/scripts/mermaid_extract.py` on the Mermaid source from the .md file to get the structural digest (nodes, edges, containers)
    - **Redraw, never convert** — keep the content (components, relationships, grouping, direction), discard Mermaid's automatic layout
-2. Choose the **Architecture** visual type (`references/type-architecture.md`); set dials size `doc-wide`, detail `balanced`, audience `mixed`
+2. Choose the **Architecture** visual type (`references/type-architecture.md`); set dials size `doc-wide`, detail **`faithful`** (≤24 nodes, zoned — required to carry the network detail above: CIDRs, IGW/NAT, SG boundaries), audience `mixed`
 3. Use **official AWS Architecture Icons** for all named AWS services (ECS, EKS, ALB, RDS, S3, etc.) and VPC/subnet zone conventions per `references/primitive-aws-icons.md`
 4. Respect the skill's complexity budget (max 9 nodes / 12 arrows) — if the architecture exceeds it, split into overview + per-domain detail diagrams
 5. Produce the diagram as a **standalone .svg file** directly (per the skill's `references/export.md` output contract): XML declaration, `xmlns`, `viewBox`, `<title>`/`<desc>` accessibility pair, `local()`-only Amazon Ember `@font-face`. Save next to the .md: `to-be-architecture.svg`
