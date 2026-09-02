@@ -144,6 +144,14 @@ Containers are placed in Private Subnets with traffic routed through ALB.
 - Show data flow and integration points
 - Generate .html file for customer review using the **`aws-diagram-design` skill** (see below)
 
+**Mermaid renderer-safety rules (MANDATORY — prevents broken/overlapping boxes in IDE and Git previews)**:
+- **Max 2 levels of subgraph nesting** (e.g., VPC → subnet). A third level (e.g., subnet → ECS cluster) frequently causes child nodes to overflow their parent box — represent the cluster as a label on the subnet subgraph or on the node itself instead
+- **Keep subgraph titles short** (< ~40 chars). Move IDs, CIDRs, and option lists into body text (§4) — long titles inflate the title row and squeeze children out of the box
+- **Never draw an edge to/from a subgraph itself** (e.g., `CP --> ECS` where ECS is a subgraph) — target a concrete node inside it. Subgraph-targeted edges distort the layout engine's box sizing
+- **Prefer `flowchart LR`** with `direction LR` inside the outer subgraph for architecture diagrams — vertical (`TB`) stacking of wide Korean/CJK labels is the most common overflow trigger
+- Keep node labels ≤3 lines; move detail to the document body
+- Detail lives in §4 and in the skill-generated HTML — the Mermaid diagram is a structural overview, not a spec sheet
+
 **Customer-review HTML generation (aws-diagram-design skill)**:
 
 Check skill availability first: the skill lives at `~/.kiro/skills/aws-diagram-design/` (or is listed in the loaded skills index).
