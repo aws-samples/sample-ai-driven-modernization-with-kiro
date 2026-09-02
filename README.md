@@ -34,6 +34,11 @@ This project is a prompt set designed to guide the step-by-step modernization of
 - IaC tool: AWS CDK (`cdk --version`) or Terraform (`terraform --version`)
 - DB connection info (for DB migration)
 
+**Optional Skill** (Stage 3 — AWS-branded architecture diagrams):
+- [aws-diagram-design](https://github.com/masangbeom/aws-diagram-design) skill installed at `~/.kiro/skills/aws-diagram-design/`
+- With the skill: the approved To-Be architecture gets an AWS-branded SVG diagram (official AWS Architecture Icons, VPC/subnet zone conventions) embedded in the architecture document
+- Without it: diagrams fall back to Mermaid only (still renders cleanly — no breakage)
+
 ### Getting Started
 ```bash
 # 1. Clone the project

@@ -14,6 +14,11 @@ This guide walks you through how to start workload modernization using the AI-Dr
 - [ ] IaC tool: AWS CDK (`cdk --version`) or Terraform (`terraform --version`)
 - [ ] DB connection info (for DB migration)
 
+### 2-1. Optional Skill (Stage 3 — AWS-branded architecture diagrams)
+- [ ] [aws-diagram-design](https://github.com/masangbeom/aws-diagram-design) skill installed at `~/.kiro/skills/aws-diagram-design/`
+
+With the skill installed, the approved To-Be architecture is rendered as an AWS-branded SVG diagram (official AWS Architecture Icons, VPC/subnet zone conventions, security-group boundaries) embedded in `outputs/architecture/to-be-architecture.md`. Without it, diagrams fall back to Mermaid only — still clean, just not branded.
+
 ### 3. Input Document Preparation (Optional)
 Preparing these documents in advance speeds up the analysis. **If not prepared, AI will collect the necessary information via Q&A.**
 
