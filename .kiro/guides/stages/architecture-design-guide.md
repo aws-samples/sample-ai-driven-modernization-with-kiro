@@ -166,7 +166,8 @@ Check skill availability first: the skill lives at `~/.kiro/skills/aws-diagram-d
 5. Respect the skill's complexity budget (max 9 nodes / 12 arrows per diagram) — if the architecture exceeds it, split into overview + per-domain detail diagrams within the same HTML file
 6. Run the skill's self-check before finalizing: `python3 <skill-dir>/scripts/self_check.py outputs/architecture/to-be-architecture.html` and `verify-geometry.py`
 7. Save the result as `outputs/architecture/to-be-architecture.html` (single self-contained file)
-8. Report the fidelity ledger to the user: what was merged, collapsed, or split relative to the Mermaid source
+8. **Embed the skill diagrams in the .md too**: follow the skill's SVG export procedure (`references/export.md`) — extract each `<svg>` block from the HTML, make it standalone (XML declaration, `xmlns`, keep `viewBox`/`<title>`/`<desc>`, inject `local()`-only Amazon Ember `@font-face`), save next to the .md (e.g., `to-be-architecture.svg`, `to-be-architecture-phases.svg`), and reference them with `![...](./to-be-architecture.svg)` at the top of the diagram sections. Keep the Mermaid source below the image as the text-diffable working copy
+9. Report the fidelity ledger to the user: what was merged, collapsed, or split relative to the Mermaid source
 
 **If the skill is NOT available (fallback)**:
 - Generate the .html with the same Mermaid source rendered via Mermaid CDN (`https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js`) + custom theme (Compute=orange, Database=blue, Network=green, Security=red)
