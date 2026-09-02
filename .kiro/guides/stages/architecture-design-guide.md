@@ -143,7 +143,7 @@ Containers are placed in Private Subnets with traffic routed through ALB.
 - During design iterations AND the approval presentation (Step 2–5): use **Mermaid only** in the .md — cheap to regenerate, and the approval gate is presented without waiting for diagram rendering
 - Show all components (VPC, subnets, ECS/EKS, ALB, RDS, etc.), data flow, and integration points
 - **Required network detail** (both in the Mermaid overview where practical, and MANDATORY in the final SVG):
-  - Subnet names **with CIDR blocks and AZs** as zone sublabels (e.g., `퍼블릭 서브넷 · 10.100.1.0/24 (2a) · 10.100.2.0/24 (2b)`)
+  - Subnet names **with CIDR blocks and AZs** as zone sublabels (e.g., `Public subnets · 10.0.1.0/24 (az-a) · 10.0.2.0/24 (az-b)`)
   - **Internet Gateway and NAT Gateway** as explicit nodes on the traffic path
   - **Security groups** as dashed boundaries (AWS convention: `#DD344C` dashed, text label only) around the resources they protect, labeled with the SG name and key allowed flows (e.g., `alb-sg: 80 from 0.0.0.0/0`)
   - **NACL** as a zone sublabel on each subnet when non-default (e.g., `NACL: default (allow all)` may be a single footnote if all subnets use the default)
